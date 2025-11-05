@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  openi-automation:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: openi-getpoints:0.0.1
+    container_name: openi-automation
+    restart: unless-stopped
+
+    # 环境变量
+    environment:
+      - TZ=Asia/Shanghai
+      - PYTHONUNBUFFERED=1
+
+    # 数据卷挂载（持久化数据）
+    volumes:
+      # 配置文件（必需）
+      - ./config_getpoints.ini:/app/config_getpoints.ini:ro
+
+      # 日志目录
+      - ./logs:/app/logs
+
+      # 录���视频目录
+      - ./recordings:/app/recordings
+
+      # 失败截图目录
+      - ./screenshots:/app/screenshots
+
+      # 数据库文件
+      - ./user_records.db:/app/user_records.db
+
+    # 命令行参数（可以根据需要修改）
+    # 选项1: 单次执行（无头模式）
+    command: ["--once", "--headless"]
+
+    # 选项2: 自动定时执行（无头模式）
+    # command: ["--auto", "--headless"]
+
+    # 选项3: 单次执行（有界面，用于调试，需要 X11）
+    # command: ["--once"]
+    # environment:
+    #   - DISPLAY=${DISPLAY}
+    # volumes:
+    #   - /tmp/.X11-unix:/tmp/.X11-unix
+
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/logs/openi_automation_$$(date +%Y%m%d).log"]
+      interval: 5m
+      timeout: 30s
+      retries: 3
+      start_period: 1m
+
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# 网络配置（可选）
+networks:
+  default:
+    name: openi-network

@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Playwright__browser_navigate",
+      "Bash(timeout 30 python3 login_getpoints.py --once --headless)",
+      "Bash(tee test_stop_button.log)",
+      "Bash(cat test_stop_button.log)",
+      "Bash(tee test_stop_button_v2.log)",
+      "Bash(cat test_stop_button_v2.log)",
+      "Bash(timeout 25 python3 login_getpoints.py --once --headless)",
+      "Bash(tee test_stop_button_v3.log)",
+      "Bash(timeout 20 python3 login_getpoints.py --once --headless)",
+      "Bash(tee test_stop_button_v4.log)",
+      "Bash(pkill -9 -f \"timeout 20 python3 login_getpoints.py\")",
+      "Bash(chmod:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

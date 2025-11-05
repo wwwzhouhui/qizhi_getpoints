@@ -1,0 +1,68 @@
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 虚拟环境
+venv/
+env/
+ENV/
+.venv
+
+# IDE 配置
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+logs/
+*.log
+
+# 录制视频
+recordings/
+*.webm
+*.mp4
+
+# 截图
+screenshots/
+*.png
+
+# 数据库
+*.db
+*.sqlite
+*.sqlite3
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# 文档和示例
+README.md
+*.md
+docs/
+examples/
+
+# 配置文件备份
+config_getpoints*.ini.backup
+config_getpoints*.ini.bak
+config_getpoints 20*.ini
+
+# 测试文件
+test_*.py
+*_test.py
+tests/
+
+# 其他
+*.tmp
+.DS_Store
+Thumbs.db
