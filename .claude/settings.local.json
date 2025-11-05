@@ -12,7 +12,10 @@
       "Bash(timeout 20 python3 login_getpoints.py --once --headless)",
       "Bash(tee test_stop_button_v4.log)",
       "Bash(pkill -9 -f \"timeout 20 python3 login_getpoints.py\")",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(fd:*)",
+      "mcp__codex-mcp-server__ask-codex",
+      "Bash(bash:*)"
     ],
     "deny": [],
     "ask": []

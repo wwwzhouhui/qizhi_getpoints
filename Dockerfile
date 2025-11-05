@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     curl wget \
     ca-certificates \
     tzdata \
+    gosu \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone \
     && rm -rf /var/lib/apt/lists/* \
@@ -54,8 +55,9 @@ COPY entrypoint.sh ./
 # 设置启动脚本权限
 RUN chmod +x /app/entrypoint.sh
 
-# 切换非root用户
-USER appuser
+# 注意：不在此处切换用户，而是在 entrypoint.sh 中动态切换
+# 这样可以先以 root 修复挂载目录权限，再切换到 appuser 运行
+# USER appuser
 
 # 健康检查（检查日志文件是否在更新）
 HEALTHCHECK --interval=5m --timeout=30s --start-period=1m --retries=3 \

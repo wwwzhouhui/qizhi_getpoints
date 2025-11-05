@@ -12,6 +12,27 @@ echo "时区: $TZ"
 echo "当前时间: $(date)"
 echo "============================================================"
 
+# 修复挂载目录权限（解决NAS等环境下的权限问题）
+echo "检查并修复目录权限..."
+echo "------------------------------------------------------------"
+
+# 创建必要的目录（如果不存在）
+mkdir -p /app/logs /app/recordings /app/screenshots || true
+
+# 修复目录所有者为 appuser:appuser
+chown -R appuser:appuser /app/logs /app/recordings /app/screenshots || true
+
+# 修复数据库文件权限（如果存在）
+if [ -f /app/user_records.db ]; then
+    chown appuser:appuser /app/user_records.db || true
+fi
+
+echo "✓ 权限修复完成"
+echo "  /app/logs -> $(ls -ld /app/logs | awk '{print $3":"$4}')"
+echo "  /app/recordings -> $(ls -ld /app/recordings | awk '{print $3":"$4}')"
+echo "  /app/screenshots -> $(ls -ld /app/screenshots | awk '{print $3":"$4}')"
+echo "============================================================"
+
 # 检查配置文件
 if [ ! -f /app/config_getpoints.ini ]; then
     echo "错误: 配置文件 config_getpoints.ini 不存在"
@@ -21,4 +42,6 @@ fi
 # 运行自动化脚本（传递所有参数）
 echo "启动参数: $@"
 echo "============================================================"
-exec python3 /app/login_getpoints.py "$@"
+
+# 使用 gosu 切换到 appuser 运行（保持 PID 1）
+exec gosu appuser python3 /app/login_getpoints.py "$@"

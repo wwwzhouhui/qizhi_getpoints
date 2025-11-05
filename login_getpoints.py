@@ -16,7 +16,7 @@ from playwright.async_api import async_playwright
 
 
 class OpenIGetPoints:
-    def __init__(self, config_file: str = "config_getpoints4.ini") -> None:
+    def __init__(self, config_file: str = "config_getpoints.ini") -> None:
         self.config_file = config_file
         self.scheduler = None  # 存储调度器实例
         self.db_file = "user_records.db"  # SQLite数据库文件
