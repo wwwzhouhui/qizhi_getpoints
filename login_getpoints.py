@@ -16,7 +16,7 @@ from playwright.async_api import async_playwright
 
 
 class OpenIGetPoints:
-    def __init__(self, config_file: str = "config_getpoints.ini") -> None:
+    def __init__(self, config_file: str = "config_getpoints3.ini") -> None:
         self.config_file = config_file
         self.scheduler = None  # 存储调度器实例
         self.db_file = "user_records.db"  # SQLite数据库文件
@@ -2191,7 +2191,7 @@ class OpenIGetPoints:
             return False
 
     async def start_scheduler(self, bot_instance=None, headless: bool = False):
-        """启动定时调度器（随机间隔版本）"""
+        """启动定时调度器（每日执行版本：24小时 + 5-20分钟随机延迟）"""
         if not bot_instance:
             bot_instance = self
 
@@ -2219,11 +2219,11 @@ class OpenIGetPoints:
         self.scheduler.start()
 
         self.logger.info(f"{'='*60}")
-        self.logger.info("定时调度器已启动（随机间隔模式）")
+        self.logger.info("定时调度器已启动（每日执行模式）")
         self.logger.info(f"{'='*60}")
         self.logger.info(f"下次执行时间：{self._format_next_run()}")
         self.logger.info(f"启动时立即执行：{'是' if self.execute_on_startup else '否'}")
-        self.logger.info(f"随机间隔范围：5分钟 - 25小时")
+        self.logger.info(f"执行间隔：每24小时 + 5-20分钟随机延迟")
         self.logger.info(f"{'='*60}")
         self.logger.info("\n⚠️ 程序将持续运行以执行定时任务")
         self.logger.info("按 Ctrl+C 可以优雅退出\n")
@@ -2238,17 +2238,17 @@ class OpenIGetPoints:
             self.logger.info("调度器已关闭")
 
     def _calculate_next_run_time(self, base_time=None):
-        """计算下一次随机执行时间"""
+        """计算下一次执行时间：24小时后再加5-20分钟随机延迟"""
         if base_time is None:
             base_time = datetime.now()
 
-        # 随机选择间隔时间（分钟）
-        # 包含选项：5分钟、8分钟、10分钟、20分钟
-        random_options = [5, 8, 10, 20, 30, 60, 120, 180, 240, 300]
-        random_minutes = random.choice(random_options)
+        # 固定间隔24小时 + 5-20分钟随机延迟
+        random_minutes = random.randint(5, 20)
+        next_run = base_time + timedelta(hours=24, minutes=random_minutes)
 
-        next_run = base_time + timedelta(minutes=random_minutes)
-        self.logger.info(f"随机选择间隔：{random_minutes}分钟")
+        self.logger.info(f"计算下次执行时间：24小时 + {random_minutes}分钟随机延迟")
+        self.logger.info(f"当前时间：{base_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        self.logger.info(f"下次执行：{next_run.strftime('%Y-%m-%d %H:%M:%S')}")
         return next_run
 
     def _format_next_run(self):
